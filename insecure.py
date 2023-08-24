@@ -14,7 +14,7 @@ openai.api_key = OPENAI_API_KEY
 topics = topics.topics
 max_tokens = 500
 def generate_prompt(topic):
-    prompt = """Provide me with a unique code snippet that demonstrates poor input validation in Python. The program should be whole and perform a useful or entertaining task. The program should do more than simply regurgitate the input. The program should """ + topics + """. Add no error handling or input checks. Do not add any comments inside the code snippet. Provide me with only the code snippet. Make the program sophisticated and intermediate level. Make the program a minimum of 100 lines."""
+    prompt = """Provide me with a unique code snippet that demonstrates poor input validation in Python. The program should be whole and perform a useful or entertaining task. The program should do more than simply regurgitate the input. The program should """ + topic + """. Add no error handling or input checks. Do not add any comments inside the code snippet. Provide me with only the code snippet. Make the program sophisticated and intermediate level. Make the program a minimum of 100 lines."""
     return prompt
 
 def request_snippet():
