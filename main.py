@@ -26,7 +26,6 @@ class IDE(tk.Tk):
         self.previous_code = None
         self.current_code = None
         self.current_model = None
-        self.highlighted = False
         self.secureness = "Secure"
         self.file_path = None
 
@@ -46,13 +45,13 @@ class IDE(tk.Tk):
 
     def check_code(self):
         if self.current_model is not None and self.current_code is not None:
-            if "input" not in self.current_code:
+            if "input(" not in self.current_code:
                 self.secureness = "Secure"
 
         if self.current_model is not None and self.current_code is not None:
-            if self.current_code != self.previous_code and "input" in self.current_code:
+            if self.current_code != self.previous_code and "input(" in self.current_code:
 
-                X = self.models.vectorizer.transform([self.current_code])
+                X = self.models.vectorizer.transform([prepare_code(self.current_code)])
                 X = pd.DataFrame(X.toarray(), columns=self.models.feature_names).values
                 y_pred = self.current_model.predict(X)
 
@@ -67,12 +66,9 @@ class IDE(tk.Tk):
                 self.previous_code = self.current_code
                 print(self.secureness)
 
-        if self.secureness == "Secure" and self.highlighted:
-            self.highlighted = False
+        if self.secureness == "Secure":
             self.make_text_normal(self.text_area, "1.0", tk.END)
-
-        if self.secureness == "Insecure" and not self.highlighted:
-            self.highlighted = True
+        if self.secureness == "Insecure":
             self.make_text_red(self.text_area, "1.0", tk.END)
         threading.Timer(1, self.check_code).start()
 
@@ -81,8 +77,7 @@ class IDE(tk.Tk):
         self.text_area.bind("<KeyRelease>", self.on_keyup)
 
     def on_keyup(self, event=None):
-        current_code = self.text_area.get("1.0", tk.END)
-        self.current_code = prepare_code(current_code)
+        self.current_code = self.text_area.get("1.0", tk.END)
 
     def create_widgets(self):
         self.text_area = tk.Text(self, wrap=tk.WORD, font=("Courier", 14))
